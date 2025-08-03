@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Player, Round } from "@shared/schema";
 
@@ -93,6 +93,12 @@ export function ScoreEntryModal({ open, onClose, players, onSave, editingRound }
           <DialogTitle>
             {editingRound ? `Edit Round ${editingRound.number}` : "Enter Round Scores"}
           </DialogTitle>
+          <DialogDescription>
+            {editingRound 
+              ? "Update the scores for all players in this round."
+              : "Enter scores for each player. Leave blank or click Skip to record a score of 0."
+            }
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mb-6">

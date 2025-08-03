@@ -1,7 +1,7 @@
 import React from "react";
 import { X, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Game } from "@shared/schema";
 import { gameStorage } from "@/lib/gameStorage";
@@ -72,6 +72,9 @@ export function SavedGamesModal({ open, onClose, onLoadGame }: SavedGamesModalPr
       <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Saved Games</DialogTitle>
+          <DialogDescription>
+            Load a previously saved game or delete games you no longer need.
+          </DialogDescription>
         </DialogHeader>
 
         {savedGames.length === 0 ? (

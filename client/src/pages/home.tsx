@@ -119,6 +119,8 @@ export default function Home() {
       currentRound: editingRound ? currentGame.currentRound : currentGame.currentRound + 1,
     };
 
+
+
     setCurrentGame(updatedGame);
     gameStorage.saveGame(updatedGame);
     setShowScoreModal(false);
@@ -263,6 +265,8 @@ export default function Home() {
 
   if (!currentGame) return null;
 
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -319,11 +323,11 @@ export default function Home() {
 
         {/* Score Table */}
         <Card className="overflow-hidden">
-          {/* Frozen Header with Totals */}
-          <div className="bg-gray-50 border-b border-gray-200 sticky top-16 z-40">
-            <div className="overflow-x-auto">
+          <div className="overflow-x-auto">
+            <div className="max-h-96 overflow-y-auto">
               <table className="w-full">
-                <thead>
+                {/* Frozen Header with Totals */}
+                <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-40">
                   <tr>
                     <th className="text-left py-4 px-4 font-medium text-gray-900 w-20">Round</th>
                     {currentGame.players.map((player) => (
@@ -336,41 +340,37 @@ export default function Home() {
                     ))}
                   </tr>
                 </thead>
+
+                {/* Score Rounds */}
+                <tbody className="divide-y divide-gray-100">
+                  {currentGame.rounds.length === 0 ? (
+                    <tr>
+                      <td colSpan={currentGame.players.length + 1} className="py-8 text-center text-gray-500">
+                        No rounds yet. Click the + button to start recording scores.
+                      </td>
+                    </tr>
+                  ) : (
+                    currentGame.rounds.map((round) => (
+                      <tr key={round.id} className="hover:bg-gray-50">
+                        <td className="py-3 px-4 text-sm font-medium text-gray-900">
+                          {round.number}
+                        </td>
+                        {currentGame.players.map((player) => (
+                          <td key={player.id} className="py-3 px-4 text-center">
+                            <button
+                              onClick={() => editRound(round)}
+                              className={`inline-flex items-center justify-center w-12 h-8 rounded font-mono text-sm cursor-pointer transition-colors ${getScoreColor(round.scores[player.id] || 0)}`}
+                            >
+                              {formatScore(round.scores[player.id] || 0)}
+                            </button>
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  )}
+                </tbody>
               </table>
             </div>
-          </div>
-
-          {/* Score Rounds */}
-          <div className="overflow-x-auto max-h-96 overflow-y-auto">
-            <table className="w-full">
-              <tbody className="divide-y divide-gray-100">
-                {currentGame.rounds.length === 0 ? (
-                  <tr>
-                    <td colSpan={currentGame.players.length + 1} className="py-8 text-center text-gray-500">
-                      No rounds yet. Click "New Round" to start recording scores.
-                    </td>
-                  </tr>
-                ) : (
-                  currentGame.rounds.map((round) => (
-                    <tr key={round.id} className="hover:bg-gray-50">
-                      <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                        {round.number}
-                      </td>
-                      {currentGame.players.map((player) => (
-                        <td key={player.id} className="py-3 px-4 text-center">
-                          <button
-                            onClick={() => editRound(round)}
-                            className={`inline-flex items-center justify-center w-12 h-8 rounded font-mono text-sm cursor-pointer transition-colors ${getScoreColor(round.scores[player.id] || 0)}`}
-                          >
-                            {formatScore(round.scores[player.id] || 0)}
-                          </button>
-                        </td>
-                      ))}
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
           </div>
         </Card>
 
