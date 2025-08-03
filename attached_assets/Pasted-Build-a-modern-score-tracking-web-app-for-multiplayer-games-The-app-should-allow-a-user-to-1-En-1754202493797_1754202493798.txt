@@ -1,0 +1,39 @@
+Build a modern score-tracking web app for multiplayer games.
+
+The app should allow a user to:
+	1.	Enter player names one by one.
+	•	Each time the user hits “Enter,” a new row appears.
+	•	Once all players are added, they click a “Start Game” button.
+	•	No validation for duplicates.
+	2.	Input round scores.
+	•	After each game round, users enter scores for all players at once.
+	•	If a player sits out, the user can skip that player—automatically adding a 0 score.
+	•	Newest round appears at the top, pushing older scores down.
+	•	Each player’s column has a live-updating total score displayed at the top (frozen row style).
+	3.	Edit past rounds.
+	•	Users can click on any player’s score in a past round.
+	•	This opens editable fields for all players in that round.
+	•	After editing, clicking “Save” updates the scores and recalculates all totals/stats live.
+	4.	Additional features:
+	•	Scores are whole numbers and can be negative.
+	•	Basic error validation: alert if a non-numeric input is entered.
+	•	An optional “📊 Stats” icon opens a panel showing:
+	•	Highest score per player
+	•	Average score per player
+	•	Number of rounds played
+	5.	Storage:
+	•	App should store the last 15 games locally (using localStorage).
+	•	Each game is independent and can be viewed/loaded individually.
+	6.	User interface:
+	•	Web-based, modern, clean UI. No text-based console design.
+	•	Preferably mobile-friendly and responsive for potential future app store publishing.
+	•	Fixed total row at the top of the score table, like Excel’s frozen header.
+	•	The stack should be easy to migrate later into a mobile app (e.g., with React Native or Capacitor).
+
+⸻
+
+🛠 Recommended Stack (based on your goals):
+	•	Frontend: HTML + CSS + JavaScript (Vanilla or React)
+React would make live updating, conditional rendering, and state management easier.
+	•	Storage: localStorage (for now, up to 15 saved games)
+	•	Hosting/Deployment: Replit for development; later use something like Expo (if React Native) for mobile app store publishing.
