@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Trophy, Plus, History, BarChart3, X, Trash2 } from "lucide-react";
+import { Trophy, Plus, History, BarChart3, X, Trash2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Game, Player, Round } from "@shared/schema";
 import { 
@@ -28,6 +30,8 @@ export default function Home() {
   const [showStatsPanel, setShowStatsPanel] = useState(false);
   const [showSavedGamesModal, setShowSavedGamesModal] = useState(false);
   const [editingRound, setEditingRound] = useState<Round | null>(null);
+  const [showAddPlayerModal, setShowAddPlayerModal] = useState(false);
+  const [newPlayerNameInGame, setNewPlayerNameInGame] = useState("");
   const { toast } = useToast();
   const newPlayerInputRef = useRef<HTMLInputElement>(null);
 
@@ -142,6 +146,47 @@ export default function Home() {
     setPlayers(game.players);
     setCurrentView("game");
     setShowSavedGamesModal(false);
+  };
+
+  const addPlayerToGame = () => {
+    if (!currentGame || !newPlayerNameInGame.trim()) {
+      toast({
+        title: "Invalid name",
+        description: "Player name cannot be empty",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newPlayer = createPlayer(newPlayerNameInGame.trim());
+    
+    // Add default scores of 0 for all existing rounds
+    const updatedRounds = currentGame.rounds.map(round => ({
+      ...round,
+      scores: {
+        ...round.scores,
+        [newPlayer.id]: 0
+      }
+    }));
+
+    const updatedPlayers = [...currentGame.players, newPlayer];
+    const updatedPlayersWithTotals = updatePlayerTotals(updatedPlayers, updatedRounds);
+    
+    const updatedGame = {
+      ...currentGame,
+      players: updatedPlayersWithTotals,
+      rounds: updatedRounds,
+    };
+
+    setCurrentGame(updatedGame);
+    gameStorage.saveGame(updatedGame);
+    setShowAddPlayerModal(false);
+    setNewPlayerNameInGame("");
+
+    toast({
+      title: "Player added",
+      description: `${newPlayer.name} has been added to the game with default scores`,
+    });
   };
 
   const getScoreColor = (score: number) => {
@@ -313,6 +358,14 @@ export default function Home() {
           <div className="flex items-center space-x-3">
             <Button
               variant="outline"
+              onClick={() => setShowAddPlayerModal(true)}
+              className="flex items-center space-x-2"
+            >
+              <UserPlus className="h-4 w-4" />
+              <span className="hidden sm:inline">Add Player</span>
+            </Button>
+            <Button
+              variant="outline"
               onClick={endGame}
               className="text-gray-600 hover:text-gray-800"
             >
@@ -409,6 +462,53 @@ export default function Home() {
         onClose={() => setShowSavedGamesModal(false)}
         onLoadGame={loadGame}
       />
+
+      {/* Add Player Modal */}
+      <Dialog open={showAddPlayerModal} onOpenChange={setShowAddPlayerModal}>
+        <DialogContent className="max-w-md w-full">
+          <DialogHeader>
+            <DialogTitle>Add Player to Game</DialogTitle>
+            <DialogDescription>
+              New player will get default scores of 0 for all previous rounds, which you can edit later.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label className="block text-sm font-medium text-gray-700 mb-2">
+                Player Name
+              </Label>
+              <Input
+                value={newPlayerNameInGame}
+                onChange={(e) => setNewPlayerNameInGame(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && addPlayerToGame()}
+                placeholder="Enter player name..."
+                autoFocus
+              />
+            </div>
+          </div>
+
+          <div className="flex space-x-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAddPlayerModal(false);
+                setNewPlayerNameInGame("");
+              }}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={addPlayerToGame}
+              disabled={!newPlayerNameInGame.trim()}
+              className="flex-1"
+            >
+              Add Player
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
