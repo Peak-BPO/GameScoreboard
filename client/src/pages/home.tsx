@@ -308,13 +308,6 @@ export default function Home() {
           </div>
           <div className="flex items-center space-x-3">
             <Button
-              onClick={() => setShowScoreModal(true)}
-              className="flex items-center space-x-2"
-            >
-              <Plus className="h-4 w-4" />
-              <span>New Round</span>
-            </Button>
-            <Button
               variant="outline"
               onClick={endGame}
               className="text-gray-600 hover:text-gray-800"
@@ -380,6 +373,17 @@ export default function Home() {
             </table>
           </div>
         </Card>
+
+        {/* Floating Action Button for Score Entry */}
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button 
+            onClick={() => setShowScoreModal(true)}
+            size="lg"
+            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
+          >
+            <Plus className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
 
       {/* Modals and Panels */}
