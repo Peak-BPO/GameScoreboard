@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { hapticSuccess, hapticWarning } from "@/lib/haptics";
 import { Player, Round } from "@shared/schema";
 
 interface ScoreEntryModalProps {
@@ -63,6 +64,7 @@ export function ScoreEntryModal({ open, onClose, players, onSave, editingRound }
       const score = parseInt(scoreString, 10);
       
       if (scoreString !== "" && isNaN(score)) {
+        hapticWarning();
         toast({
           title: "Invalid score",
           description: `Please enter a valid number for ${player.name}`,
@@ -76,6 +78,7 @@ export function ScoreEntryModal({ open, onClose, players, onSave, editingRound }
     }
 
     if (!hasError) {
+      hapticSuccess();
       onSave(finalScores);
     }
   };

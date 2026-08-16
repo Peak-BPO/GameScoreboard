@@ -4,3 +4,8 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+# iOS / Xcode build artifacts
+ios/App/build/
+ios/App/Pods/
+DerivedData/
+*.xcuserstate
